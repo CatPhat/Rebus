@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rebus.Bus;
 using Rebus.Configuration;
 using SimpleInjector;
 
@@ -43,8 +44,7 @@ namespace Rebus.SimpleInjector
         public void SaveBusInstances(IBus bus)
         {
             container.Register<IBus>(() => bus,Lifestyle.Singleton);
-
-            container.Register<IMessageContext>(()=>MessageContext.GetCurrent(),Lifestyle.Transient);
+            container.Register<IMessageContext>(() => Container.IsVerifying ? new FakeMessageContext() : MessageContext.GetCurrent(),Lifestyle.Transient);
         }
     }
 }
